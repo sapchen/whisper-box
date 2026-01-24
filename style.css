@@ -78,8 +78,10 @@ body {
     font-family: var(--font-title);
     font-size: 2.5em;
     background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text; /* Chrome, Safari, Edge */
+    background-clip: text; /* 标准属性 */
+    -webkit-text-fill-color: transparent; /* Chrome, Safari, Edge */
+    color: transparent; /* 标准属性 */
     position: relative;
     text-transform: uppercase;
     letter-spacing: 2px;
@@ -655,4 +657,46 @@ body {
 .social-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* 社交媒体按钮样式 */
+.social-share {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.social-btn {
+    flex: 1;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+.social-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.social-btn.qq {
+    background: #12B7F5;
+}
+
+.social-btn.weibo {
+    background: #E6162D;
+}
+
+@media (max-width: 768px) {
+    .social-share {
+        flex-direction: column;
+    }
 }

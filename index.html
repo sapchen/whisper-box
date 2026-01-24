@@ -187,6 +187,40 @@
         </div>
     </div>
 
+    <!-- 分享模态框 - 简化版 -->
+    <div class="modal" id="shareModal">
+        <div class="modal-content cyber-card">
+            <div class="modal-header">
+                <h3><i class="fas fa-share-alt"></i> 分享你的链接</h3>
+                <button class="close-btn" onclick="closeShare()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="share-url-container">
+                    <input type="text" 
+                        readonly 
+                        id="shareUrl" 
+                        class="cyber-input large"
+                        value="加载中...">
+                    <button class="cyber-btn primary" onclick="copyShareUrl()">
+                        <i class="fas fa-copy"></i>
+                    </button>
+                </div>
+                <div class="qr-container">
+                    <div id="qrcode"></div>
+                    <p class="qr-hint">扫描二维码分享</p>
+                </div>
+                <div class="social-share">
+                    <button class="social-btn qq" onclick="shareToQQ()">
+                        <i class="fab fa-qq"></i> QQ
+                    </button>
+                    <button class="social-btn weibo" onclick="shareToWeibo()">
+                        <i class="fab fa-weibo"></i> 微博
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- 消息详情模态框 -->
     <div class="modal" id="messageModal">
         <div class="modal-content cyber-card">

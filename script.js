@@ -505,23 +505,24 @@ function copyShareUrl() {
         .catch(() => app.showNotification('复制失败', 'error'));
 }
 
-// 社交媒体分享
-function shareToTwitter() {
-    const text = `给我发送匿名悄悄话: ${document.getElementById('shareUrl').value}`;
-    const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
-    window.open(url, '_blank');
+// 分享功能 - 简化版
+function shareToQQ() {
+    const url = encodeURIComponent(document.getElementById('shareUrl').value);
+    const title = encodeURIComponent('匿名悄悄话 | 有什么想对我说的吗？');
+    const summary = encodeURIComponent('完全匿名的悄悄话应用，想说什么都可以～');
+    const shareUrl = `http://connect.qq.com/widget/shareqq/index.html?url=${url}&title=${title}&summary=${summary}`;
+    
+    window.open(shareUrl, '_blank', 'width=600,height=400');
+    app.showNotification('已打开QQ分享', 'info');
 }
 
-function shareToTelegram() {
-    const text = `给我发送匿名悄悄话: ${document.getElementById('shareUrl').value}`;
-    const url = `https://t.me/share/url?url=${encodeURIComponent(document.getElementById('shareUrl').value)}&text=${encodeURIComponent('匿名悄悄话链接')}`;
-    window.open(url, '_blank');
-}
-
-function shareToWhatsapp() {
-    const text = `给我发送匿名悄悄话: ${document.getElementById('shareUrl').value}`;
-    const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
-    window.open(url, '_blank');
+function shareToWeibo() {
+    const url = encodeURIComponent(document.getElementById('shareUrl').value);
+    const title = encodeURIComponent('匿名悄悄话 | 有什么想对我说的吗？');
+    const shareUrl = `http://service.weibo.com/share/share.php?url=${url}&title=${title}`;
+    
+    window.open(shareUrl, '_blank', 'width=600,height=400');
+    app.showNotification('已打开微博分享', 'info');
 }
 
 // 关闭消息详情模态框
