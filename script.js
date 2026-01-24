@@ -469,7 +469,7 @@ function saveConfig() {
     }, 1000);
 }
 
-// 分享链接
+//分享链接
 function shareLink() {
     const userId = localStorage.getItem('whisperUserId');
     if (!userId) {
@@ -477,49 +477,73 @@ function shareLink() {
         return;
     }
     
-    const baseUrl = window.location.origin + window.location.pathname.replace(/index\.html$/, '');
-    const shareUrl = `${baseUrl}whisper.html?to=${userId}`;
+    // 生成分享链接 - 使用相对路径
+    const shareUrl = `whisper.html?to=${userId}`;
+    const fullUrl = window.location.origin + '/' + shareUrl;
     
-    document.getElementById('shareUrl').value = shareUrl;
+    console.log('分享链接:', fullUrl);
     
-    // 清除之前的二维码
-    const qrcodeDiv = document.getElementById('qrcode');
-    qrcodeDiv.innerHTML = '';
+    // 更新输入框
+    document.getElementById('shareUrl').value = fullUrl;
     
-    try {
-        // 方法1：使用 new QRCode() 构造函数（大多数库的方式）
-        if (typeof QRCode !== 'undefined') {
-            new QRCode(qrcodeDiv, {
-                text: shareUrl,
-                width: 200,
-                height: 200,
-                colorDark: "#00ff88",
-                colorLight: "#141420",
-                correctLevel: QRCode.CorrectLevel.H
+    // 显示模态框
+    const shareModal = document.getElementById('shareModal');
+    shareModal.classList.add('active');
+    
+    // 延迟生成二维码，确保DOM就绪
+    setTimeout(() => {
+        if (typeof QRCodeGenerator !== 'undefined') {
+            QRCodeGenerator.generateQRCode('qrcode', fullUrl, {
+                size: 200,
+                darkColor: '#00ff88',
+                lightColor: '#141420'
             });
         } else {
-            // 方法2：降级方案
-            generateFallbackQRCode(shareUrl);
+            // 备用方案
+            generateSimpleQRCode(fullUrl);
         }
-    } catch (error) {
-        console.error('生成二维码失败:', error);
-        generateFallbackQRCode(shareUrl);
-    }
-    
-    document.getElementById('shareModal').classList.add('active');
+    }, 100);
 }
 
-// 降级方案：简单的二维码显示
-function generateFallbackQRCode(text) {
+// 备用简单二维码生成
+function generateSimpleQRCode(text) {
     const qrcodeDiv = document.getElementById('qrcode');
     if (!qrcodeDiv) return;
     
     qrcodeDiv.innerHTML = `
-        <div style="width:200px;height:200px;background:#141420;display:flex;align-items:center;justify-content:center;border-radius:8px;border:1px solid #00ff88;flex-direction:column;">
-            <i class="fas fa-qrcode" style="font-size:48px;color:#00ff88;margin-bottom:10px;"></i>
-            <div style="color:#00ff88;text-align:center;font-size:12px;padding:0 10px;">
-                二维码生成失败<br>
-                请复制链接分享
+        <div style="
+            width: 200px;
+            height: 200px;
+            background: #141420;
+            border: 2px solid #00ff88;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            text-align: center;
+            padding: 20px;
+        ">
+            <div style="
+                color: #00ff88;
+                font-size: 14px;
+                margin-bottom: 10px;
+            ">
+                <i class="fas fa-qrcode" style="font-size: 40px;"></i>
+                <div style="margin-top: 10px;">分享链接</div>
+            </div>
+            <div style="
+                color: #a0ffcc;
+                font-size: 10px;
+                word-break: break-all;
+                max-height: 50px;
+                overflow: hidden;
+                background: rgba(0,255,136,0.1);
+                padding: 5px;
+                border-radius: 4px;
+            ">
+                ${text.substring(0, 40)}...
             </div>
         </div>
     `;
@@ -538,24 +562,40 @@ function copyShareUrl() {
         .catch(() => app.showNotification('复制失败', 'error'));
 }
 
-// 分享功能 - 简化版
+// 修复QQ分享 - 使用HTTPS
 function shareToQQ() {
-    const url = encodeURIComponent(document.getElementById('shareUrl').value);
+    const shareUrlInput = document.getElementById('shareUrl');
+    if (!shareUrlInput || !shareUrlInput.value) {
+        showNotification('请先生成分享链接', 'error');
+        return;
+    }
+    
+    const url = encodeURIComponent(shareUrlInput.value);
     const title = encodeURIComponent('匿名悄悄话 | 有什么想对我说的吗？');
     const summary = encodeURIComponent('完全匿名的悄悄话应用，想说什么都可以～');
-    const shareUrl = `http://connect.qq.com/widget/shareqq/index.html?url=${url}&title=${title}&summary=${summary}`;
     
-    window.open(shareUrl, '_blank', 'width=600,height=400');
-    app.showNotification('已打开QQ分享', 'info');
+    // 使用HTTPS链接
+    const qqShareUrl = `https://connect.qq.com/widget/shareqq/index.html?url=${url}&title=${title}&desc=${summary}&site=CyberWhisper`;
+    
+    window.open(qqShareUrl, '_blank', 'width=600,height=400');
+    showNotification('已打开QQ分享', 'info');
 }
 
+
+// 微博分享
 function shareToWeibo() {
-    const url = encodeURIComponent(document.getElementById('shareUrl').value);
-    const title = encodeURIComponent('匿名悄悄话 | 有什么想对我说的吗？');
-    const shareUrl = `http://service.weibo.com/share/share.php?url=${url}&title=${title}`;
+    const shareUrlInput = document.getElementById('shareUrl');
+    if (!shareUrlInput || !shareUrlInput.value) {
+        showNotification('请先生成分享链接', 'error');
+        return;
+    }
     
-    window.open(shareUrl, '_blank', 'width=600,height=400');
-    app.showNotification('已打开微博分享', 'info');
+    const url = encodeURIComponent(shareUrlInput.value);
+    const title = encodeURIComponent('匿名悄悄话 | 有什么想对我说的吗？ #匿名悄悄话#');
+    const weiboShareUrl = `https://service.weibo.com/share/share.php?url=${url}&title=${title}`;
+    
+    window.open(weiboShareUrl, '_blank', 'width=600,height=400');
+    showNotification('已打开微博分享', 'info');
 }
 
 // 关闭消息详情模态框

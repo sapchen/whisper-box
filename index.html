@@ -243,15 +243,26 @@
     <!-- 通知 -->
     <div id="notification" class="notification"></div>
 
-    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <script src="qrcode-generator.js"></script>
     <script src="config.js"></script>
     <script src="script.js"></script>
     <script>
-        // 初始化
         document.addEventListener('DOMContentLoaded', function() {
-            initApp();
-            startParticles();
+            console.log('DOM加载完成');
+            
+            // 确保所有函数都已定义
+            if (typeof initApp === 'function') {
+                initApp();
+            } else {
+                console.error('initApp函数未定义');
+            }
+            
+            // 粒子效果
+            if (typeof startParticles === 'function') {
+                startParticles();
+            }
         });
     </script>
+    
 </body>
 </html>
