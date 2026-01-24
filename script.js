@@ -471,25 +471,58 @@ function saveConfig() {
 
 // 分享链接
 function shareLink() {
-    const shareUrl = `${window.location.origin}/whisper.html?to=${app.userId}`;
+    const userId = localStorage.getItem('whisperUserId');
+    if (!userId) {
+        showNotification('请先初始化应用', 'error');
+        return;
+    }
+    
+    const baseUrl = window.location.origin + window.location.pathname.replace(/index\.html$/, '');
+    const shareUrl = `${baseUrl}whisper.html?to=${userId}`;
+    
     document.getElementById('shareUrl').value = shareUrl;
     
-    // 生成二维码
+    // 清除之前的二维码
     const qrcodeDiv = document.getElementById('qrcode');
     qrcodeDiv.innerHTML = '';
-    QRCode.toCanvas(qrcodeDiv, shareUrl, {
-        width: 200,
-        height: 200,
-        margin: 1,
-        color: {
-            dark: '#00ff88',
-            light: '#141420'
+    
+    try {
+        // 方法1：使用 new QRCode() 构造函数（大多数库的方式）
+        if (typeof QRCode !== 'undefined') {
+            new QRCode(qrcodeDiv, {
+                text: shareUrl,
+                width: 200,
+                height: 200,
+                colorDark: "#00ff88",
+                colorLight: "#141420",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+        } else {
+            // 方法2：降级方案
+            generateFallbackQRCode(shareUrl);
         }
-    }, function(error) {
-        if (error) console.error(error);
-    });
+    } catch (error) {
+        console.error('生成二维码失败:', error);
+        generateFallbackQRCode(shareUrl);
+    }
     
     document.getElementById('shareModal').classList.add('active');
+}
+
+// 降级方案：简单的二维码显示
+function generateFallbackQRCode(text) {
+    const qrcodeDiv = document.getElementById('qrcode');
+    if (!qrcodeDiv) return;
+    
+    qrcodeDiv.innerHTML = `
+        <div style="width:200px;height:200px;background:#141420;display:flex;align-items:center;justify-content:center;border-radius:8px;border:1px solid #00ff88;flex-direction:column;">
+            <i class="fas fa-qrcode" style="font-size:48px;color:#00ff88;margin-bottom:10px;"></i>
+            <div style="color:#00ff88;text-align:center;font-size:12px;padding:0 10px;">
+                二维码生成失败<br>
+                请复制链接分享
+            </div>
+        </div>
+    `;
 }
 
 // 关闭分享模态框
