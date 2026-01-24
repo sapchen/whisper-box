@@ -1,0 +1,33 @@
+{
+  "name": "CyberWhisper",
+  "short_name": "Whisper",
+  "description": "基于GitHub Issues的匿名悄悄话应用",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0f",
+  "theme_color": "#00ff88",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "categories": ["social", "utilities"],
+  "shortcuts": [
+    {
+      "name": "查看消息",
+      "url": "/"
+    },
+    {
+      "name": "发送消息",
+      "url": "/whisper.html"
+    }
+  ]
+}

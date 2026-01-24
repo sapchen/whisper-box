@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberWhisper | 科技感悄悄话</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/svg+xml" href="icons/icon.svg">
+</head>
+<body>
+    <!-- 背景特效 -->
+    <div class="cyber-grid"></div>
+    <div class="particles-container"></div>
+    
+    <div class="container">
+        <!-- 头部 -->
+        <header class="cyber-header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-user-secret"></i>
+                </div>
+                <h1 class="cyber-title" data-text="CyberWhisper">CyberWhisper</h1>
+            </div>
+            <div class="subtitle">基于GitHub Issues的匿名消息系统</div>
+            
+            <div class="user-info">
+                <div class="cyber-card" id="userCard">
+                    <div class="card-content">
+                        <div class="status-indicator">
+                            <div class="pulse"></div>
+                            <span>在线</span>
+                        </div>
+                        <div class="user-id">
+                            <span class="label">ID:</span>
+                            <span id="userId" class="cyber-text">加载中...</span>
+                            <button class="cyber-btn small" onclick="copyUserId()">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                        <div class="share-section">
+                            <button class="cyber-btn primary" onclick="shareLink()">
+                                <i class="fas fa-share-alt"></i> 分享链接
+                            </button>
+                            <button class="cyber-btn secondary" onclick="showConfig()">
+                                <i class="fas fa-cog"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <!-- 消息统计 -->
+            <div class="stats-container">
+                <div class="cyber-card">
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="stat-info">
+                                <div class="stat-value" id="messageCount">0</div>
+                                <div class="stat-label">总消息</div>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="stat-info">
+                                <div class="stat-value" id="lastUpdate">--:--</div>
+                                <div class="stat-label">最后更新</div>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-icon">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div class="stat-info">
+                                <div class="stat-value">加密</div>
+                                <div class="stat-label">端到端保护</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 消息列表 -->
+            <div class="messages-container">
+                <div class="section-header">
+                    <h2><i class="fas fa-comments"></i> 匿名消息</h2>
+                    <div class="controls">
+                        <button class="cyber-btn" onclick="refreshMessages()">
+                            <i class="fas fa-sync-alt"></i> 刷新
+                        </button>
+                        <button class="cyber-btn danger" onclick="clearAllMessages()">
+                            <i class="fas fa-trash"></i> 清空
+                        </button>
+                    </div>
+                </div>
+
+                <div class="messages-list" id="messagesList">
+                    <!-- 消息将通过JS动态加载 -->
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <i class="fas fa-comment-slash"></i>
+                        </div>
+                        <h3>暂无消息</h3>
+                        <p>分享你的链接，接收匿名悄悄话</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- 实时状态栏 -->
+        <div class="status-bar">
+            <div class="status-item">
+                <span class="status-dot online"></span>
+                <span>系统在线</span>
+            </div>
+            <div class="status-item">
+                <span id="connectionStatus">正在连接...</span>
+            </div>
+            <div class="status-item">
+                <span>版本 1.0.0 | GitHub驱动</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 配置模态框 -->
+    <div class="modal" id="configModal">
+        <div class="modal-content cyber-card">
+            <div class="modal-header">
+                <h3><i class="fas fa-cog"></i> 系统配置</h3>
+                <button class="close-btn" onclick="closeConfig()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="cyber-label">
+                        <i class="fas fa-key"></i> GitHub Token
+                    </label>
+                    <div class="input-with-help">
+                        <input type="password" 
+                               id="githubToken" 
+                               class="cyber-input"
+                               placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
+                        <div class="help-text">
+                            需要创建具有 repo 权限的Token
+                            <a href="https://github.com/settings/tokens" target="_blank">
+                                获取Token
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="cyber-label">
+                        <i class="fas fa-user"></i> GitHub用户名
+                    </label>
+                    <input type="text" 
+                           id="repoOwner" 
+                           class="cyber-input"
+                           placeholder="your-username">
+                </div>
+                <div class="form-group">
+                    <label class="cyber-label">
+                        <i class="fas fa-database"></i> 仓库名称
+                    </label>
+                    <input type="text" 
+                           id="repoName" 
+                           class="cyber-input"
+                           placeholder="whisper-box">
+                </div>
+                <div class="form-actions">
+                    <button class="cyber-btn secondary" onclick="closeConfig()">
+                        取消
+                    </button>
+                    <button class="cyber-btn primary" onclick="saveConfig()">
+                        <i class="fas fa-save"></i> 保存配置
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 消息详情模态框 -->
+    <div class="modal" id="messageModal">
+        <div class="modal-content cyber-card">
+            <div class="modal-header">
+                <h3><i class="fas fa-envelope-open"></i> 消息详情</h3>
+                <button class="close-btn" onclick="closeMessageModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="message-detail">
+                    <div class="message-header">
+                        <span class="message-time" id="detailTime"></span>
+                        <span class="message-id" id="detailId"></span>
+                    </div>
+                    <div class="message-content" id="detailContent"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 通知 -->
+    <div id="notification" class="notification"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+    <script>
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            initApp();
+            startParticles();
+        });
+    </script>
+</body>
+</html>

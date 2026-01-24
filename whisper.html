@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>发送悄悄话 | CyberWhisper</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/svg+xml" href="icons/icon.svg">
+</head>
+<body>
+    <div class="cyber-grid"></div>
+    
+    <div class="container send-container">
+        <header class="cyber-header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-paper-plane"></i>
+                </div>
+                <h1>发送匿名悄悄话</h1>
+            </div>
+            <a href="index.html" class="cyber-btn secondary">
+                <i class="fas fa-arrow-left"></i> 返回主页
+            </a>
+        </header>
+
+        <main class="main-content">
+            <div class="send-card cyber-card">
+                <div class="card-header">
+                    <h2><i class="fas fa-user-secret"></i> 匿名消息发送器</h2>
+                    <div class="security-badge">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>完全匿名 · 端到端加密</span>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="recipient-info">
+                        <div class="info-item">
+                            <span class="label">收件人ID:</span>
+                            <span id="targetUserId" class="cyber-text"></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">消息状态:</span>
+                            <span id="sendStatus" class="status-text">准备发送</span>
+                        </div>
+                    </div>
+
+                    <div class="message-editor">
+                        <textarea 
+                            id="messageInput" 
+                            class="cyber-textarea"
+                            placeholder="输入你想说的悄悄话... (最大500字符)"
+                            maxlength="500"
+                            rows="6"></textarea>
+                        
+                        <div class="editor-footer">
+                            <div class="char-counter">
+                                <span id="charCount">0</span>/500
+                            </div>
+                            <div class="editor-tools">
+                                <button class="tool-btn" onclick="insertEmoji('😊')">😊</button>
+                                <button class="tool-btn" onclick="insertEmoji('😂')">😂</button>
+                                <button class="tool-btn" onclick="insertEmoji('❤️')">❤️</button>
+                                <button class="tool-btn" onclick="insertEmoji('🤔')">🤔</button>
+                                <button class="tool-btn" onclick="insertEmoji('🎉')">🎉</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="privacy-notice">
+                        <i class="fas fa-info-circle"></i>
+                        <p>消息将通过GitHub Issues加密存储，发送者信息不会被记录。</p>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button class="cyber-btn secondary" onclick="clearMessage()">
+                            <i class="fas fa-eraser"></i> 清空
+                        </button>
+                        <button class="cyber-btn primary" onclick="sendMessage()" id="sendBtn">
+                            <i class="fas fa-paper-plane"></i> 发送匿名消息
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="instructions cyber-card">
+                <h3><i class="fas fa-question-circle"></i> 使用说明</h3>
+                <ul>
+                    <li>消息完全匿名，不会记录发送者信息</li>
+                    <li>消息通过GitHub Issues安全存储</li>
+                    <li>收件人无法追踪消息来源</li>
+                    <li>支持基本的表情符号</li>
+                    <li>请勿发送不当内容</li>
+                </ul>
+            </div>
+        </main>
+
+        <div class="status-bar">
+            <div class="status-item">
+                <span class="status-dot online"></span>
+                <span>发送系统就绪</span>
+            </div>
+            <div class="status-item">
+                <span>加密传输 · GitHub驱动</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="notification" class="notification"></div>
+
+    <script src="config.js"></script>
+    <script src="send.js"></script>
+    <script>
+        // 获取URL参数
+        const urlParams = new URLSearchParams(window.location.search);
+        const userId = urlParams.get('to');
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            if (userId) {
+                document.getElementById('targetUserId').textContent = userId;
+                document.title = `发送消息给 ${userId} | CyberWhisper`;
+            } else {
+                document.getElementById('targetUserId').textContent = '未指定';
+                showNotification('错误: 未指定收件人', 'error');
+            }
+            
+            // 实时字符计数
+            const textarea = document.getElementById('messageInput');
+            const charCount = document.getElementById('charCount');
+            
+            textarea.addEventListener('input', function() {
+                charCount.textContent = this.value.length;
+            });
+        });
+    </script>
+</body>
+</html>
