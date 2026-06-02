@@ -1,20 +1,16 @@
 <!DOCTYPE html>
-<html lang="zh-CN" data-theme="dark">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CyberWhisper | 科技感悄悄话</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;600;700&family=Noto+Sans+SC:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/svg+xml" href="icons/icon.svg">
-</head>
+    </head>
 <body>
-    <!-- 背景特效 -->
-    <div class="cyber-grid"></div>
-    <div class="particles-container"></div>
-    
     <div class="container">
         <!-- 头部 -->
         <header class="cyber-header">
@@ -22,7 +18,7 @@
                 <div class="logo-icon">
                     <i class="fas fa-user-secret"></i>
                 </div>
-                <h1 class="cyber-title" data-text="CyberWhisper">CyberWhisper</h1>
+                <h1 class="cyber-title">CyberWhisper</h1>
             </div>
             <div class="subtitle">基于GitHub Issues的匿名消息系统</div>
             
@@ -255,11 +251,6 @@
                 initApp();
             } else {
                 console.error('initApp函数未定义');
-            }
-            
-            // 粒子效果
-            if (typeof startParticles === 'function') {
-                startParticles();
             }
         });
     </script>

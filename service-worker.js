@@ -1,4 +1,4 @@
-const CACHE_NAME = 'cyber-whisper-v1';
+const CACHE_NAME = 'whisper-v2';
 const urlsToCache = [
   '/',
   '/index.html',

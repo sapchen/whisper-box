@@ -602,38 +602,3 @@ function shareToWeibo() {
 function closeMessageModal() {
     document.getElementById('messageModal').classList.remove('active');
 }
-
-// 粒子效果
-function startParticles() {
-    const container = document.querySelector('.particles-container');
-    if (!container) return;
-    
-    for (let i = 0; i < 50; i++) {
-        const particle = document.createElement('div');
-        particle.className = 'particle';
-        particle.style.cssText = `
-            position: absolute;
-            width: ${Math.random() * 3 + 1}px;
-            height: ${Math.random() * 3 + 1}px;
-            background: var(--primary-color);
-            border-radius: 50%;
-            left: ${Math.random() * 100}%;
-            top: ${Math.random() * 100}%;
-            opacity: ${Math.random() * 0.5 + 0.1};
-            animation: float ${Math.random() * 10 + 10}s linear infinite;
-        `;
-        container.appendChild(particle);
-    }
-    
-    // 添加CSS动画
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes float {
-            0% { transform: translateY(0) translateX(0); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { transform: translateY(-100vh) translateX(${Math.random() * 100 - 50}px); opacity: 0; }
-        }
-    `;
-    document.head.appendChild(style);
-}
